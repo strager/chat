@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -e
+set -o pipefail
+set -u
+
+# HACK(strager): On failure, gist writes its error output to
+# stdout. Make sure we print errors if they happen.
+gist_url="$(gist --private "${@}" || true)"
+case "${gist_url}" in
+    http*)
+        echo "${gist_url}"
+        chat "${gist_url}"
+        ;;
+    *)
+        printf 'error: gist failed: %s\n' "${gist_url}" >&2
+        exit 1
+        ;;
+esac
