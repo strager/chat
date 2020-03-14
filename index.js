@@ -15,10 +15,9 @@ function main() {
 }
 
 function sendMessage(messageToSend) {
-  let fs = require("fs");
   let tmi = require("tmi.js");
 
-  let SECRET = fs.readFileSync("SECRET", "utf-8").trim();
+  let SECRET = getSecret();
   let client = new tmi.Client({
     connection: {
       reconnect: false,
@@ -35,4 +34,12 @@ function sendMessage(messageToSend) {
     client.say("#strager", messageToSend);
     client.disconnect();
   });
+}
+
+function getSecret() {
+  let fs = require("fs");
+  let path = require("path");
+
+  let secretFilePath = path.join(path.dirname(__filename), "SECRET");
+  return fs.readFileSync(secretFilePath, "utf-8").trim();
 }
